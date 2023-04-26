@@ -66,9 +66,17 @@ class Attributes
         $classArray  = is_array($classes) ? $classes : [$classes];
         $classString = '';
 
-        foreach ($classArray as $class => $condition) {
-            $classString .= is_int($class) ? sprintf('%s ', htmlentities($condition)) :
-                sprintf('%s="%s" ', htmlentities($class), htmlentities($condition));
+        foreach ($classArray as $class => $callback) {
+            if (is_int($class)) {
+                $class = $callback;
+                $callback = null;
+            }
+
+            if (is_callable($callback) && !call_user_func($callback)) {
+                continue;
+            }
+
+            $classString .= sprintf('%s ', htmlentities($class));
         }
 
         return $classString ? sprintf('class="%s" ', trim($classString)) : '';
