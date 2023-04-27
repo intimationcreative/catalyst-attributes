@@ -72,7 +72,11 @@ class Attributes
                 $callback = null;
             }
 
-            if (is_callable($callback) && !call_user_func($callback)) {
+            if ($callback === false) {
+                continue;
+            }
+
+            if ($callback !== true && is_callable($callback) && !call_user_func($callback)) {
                 continue;
             }
 
